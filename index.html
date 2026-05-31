@@ -17,6 +17,9 @@
     <audio id="sfx-chop" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9ec1694f28.mp3" crossorigin="anonymous"></audio>
     <audio id="sfx-mine" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3473950ffb.mp3" crossorigin="anonymous"></audio>
     <audio id="sfx-hit" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d352fc119.mp3" crossorigin="anonymous"></audio>
+    <audio id="sfx-coin" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3" crossorigin="anonymous"></audio>
+    <audio id="sfx-levelup" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" crossorigin="anonymous"></audio>
+    <audio id="sfx-magic" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_55a2985f40.mp3" crossorigin="anonymous"></audio>
 
     <div class="app-container">
         <!-- Barra Lateral -->
@@ -27,18 +30,20 @@
                 <button id="btn-toggle-music" class="action-btn" style="width:100%; margin-top:1rem; font-size:0.8rem;">🔈 Ligar Música</button>
             </div>
             
-            <div class="status-mini">
-                <span style="color:#ffb703">🪙 <span id="res-gold">0</span></span>
-                <span style="color:#ef233c">❤️ <span id="res-hp">100</span>/<span id="res-maxhp">100</span></span>
-            </div>
+            <div class="status-bar"><div class="status-fill" id="hp-fill" style="background-color: var(--color-danger); width: 100%;"></div></div>
+        <div style="font-size: 0.8rem; text-align: center; color: #00d2ff; margin-top: 5px;">MP <span id="mp-text">50/50</span></div>
+        <div class="status-bar"><div class="status-fill" id="mp-fill" style="background-color: #00d2ff; width: 100%;"></div></div>
+        <div style="font-size: 0.8rem; text-align: center; margin-top: 5px;">Ouro: <span id="gold-text">0</span>g</div>
 
             <div class="nav-category">Geral</div>
             <button class="nav-btn active" data-target="inventory" id="nav-inventory">🎒 Inventário</button>
+            <button class="nav-btn" data-target="hero" id="nav-hero">🛡️ Perfil</button>
             <button class="nav-btn" data-target="market" id="nav-market">⚖️ Mercado</button>
             <button class="nav-btn" data-target="companions" id="nav-companions">🐺 Companheiros</button>
             <button class="nav-btn" data-target="cloud" id="nav-cloud">☁️ Nuvem (Save)</button>
             
             <div class="nav-category">Coleta</div>
+            <button class="nav-btn" data-target="farming" id="nav-farming">🌱 Agricultura <span id="lvl-farm" class="lvl-badge">Nv 1</span></button>
             <button class="nav-btn" data-target="woodcutting" id="nav-woodcutting">🪓 Corte de Lenha <span id="lvl-wood" class="lvl-badge">Nv 1</span></button>
             <button class="nav-btn" data-target="mining" id="nav-mining">⛏️ Mineração <span id="lvl-mine" class="lvl-badge">Nv 1</span></button>
             <button class="nav-btn" data-target="fishing" id="nav-fishing">🎣 Pescaria <span id="lvl-fish" class="lvl-badge">Nv 1</span></button>
@@ -48,7 +53,8 @@
             <button class="nav-btn" data-target="smithing" id="nav-smithing">⚒️ Forja <span id="lvl-smith" class="lvl-badge">Nv 1</span></button>
             
             <div class="nav-category">Aventura</div>
-            <button class="nav-btn" data-target="combat" id="nav-combat">⚔️ Combate <span id="lvl-combat" class="lvl-badge">Nv 1</span></button>
+            <button class="nav-btn" data-target="combat" id="nav-combat">⚔️ Treinamento <span id="lvl-combat" class="lvl-badge">Nv 1</span></button>
+            <button class="nav-btn" data-target="dungeon" id="nav-dungeon">🏰 Masmorras</button>
         </aside>
 
         <!-- Painel Central -->
@@ -66,6 +72,38 @@
                     </div>
                 </div>
             </section>
+
+            <!-- PERFIL -->
+            <div id="tab-hero" class="tab-content glass">
+            <h2>Perfil do Personagem</h2>
+            <div id="class-selection" style="display: none; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="color: var(--color-accent); text-align: center;">Escolha sua Classe</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 15px;">A classe define seus atributos primários para sempre.</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="action-btn" id="btn-class-warrior">Guerreiro (+HP/Dano)</button>
+                    <button class="action-btn" id="btn-class-mage">Mago (+Mana)</button>
+                    <button class="action-btn" id="btn-class-rogue">Ladino (+Crítico/Esquiva)</button>
+                </div>
+            </div>
+
+            <div id="character-stats" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <h3 id="char-class-title" style="color: var(--color-accent);">[Classe]</h3>
+                    <div style="font-size: 1.2rem; font-weight: bold;">Nível Global: <span id="char-level">1</span></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                    <div>⚔️ Dano Base: <span id="hero-dmg">0-0</span></div>
+                    <div>🛡️ Defesa: <span id="hero-def">0</span></div>
+                    <div>🩸 Roubo de Vida: <span id="hero-lifesteal">0</span>%</div>
+                    <div>🎯 Acerto Crítico: <span id="hero-crit">0</span>%</div>
+                    <div>💨 Esquiva: <span id="hero-dodge">0</span>%</div>
+                </div>
+            </div>
+
+            <div class="grid-layout" id="equipment-grid">
+                <!-- Equipment rendered here -->
+            </div>
+        </div>
 
             <!-- MERCADO -->
             <section id="tab-market" class="tab-content glass">
@@ -119,6 +157,21 @@
                         <button id="btn-load-cloud" class="action-btn" style="width:100%; margin-bottom: 2rem; background: #00f3ff; color:black" onclick="window.loadFromCloud()">Carregar da Nuvem</button>
                         <button class="action-btn" style="width:100%; background: #ef233c; color:white" onclick="window.logoutUser()">Sair da Conta</button>
                     </div>
+                </div>
+            </section>
+
+            <!-- FARMING -->
+            <section id="tab-farming" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/farming.png');">
+                    <h2>AGRICULTURA MÁGICA</h2>
+                </div>
+                <div class="skill-body">
+                    <p style="text-align:center; color:var(--text-muted); margin-bottom: 2rem;">Plante sementes mágicas. Elas crescem lentamente, mas os lucros são absurdos.</p>
+                    <div id="farm-plots" style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:2rem;">
+                        <div class="inv-slot" id="plot-1">Lote 1: Vazio</div>
+                        <div class="inv-slot" id="plot-2">Lote 2: Vazio</div>
+                    </div>
+                    <div id="farm-list" class="action-grid"></div>
                 </div>
             </section>
 
@@ -224,11 +277,42 @@
                 </div>
             </section>
 
+            <!-- DUNGEONS -->
+            <section id="tab-dungeon" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/dungeon.png');">
+                    <h2>MASMORRAS PROFUNDAS</h2>
+                </div>
+                <div class="skill-body">
+                    <p style="text-align:center; color:var(--text-muted); margin-bottom: 2rem;">Derrote 10 inimigos seguidos para enfrentar o Chefão.</p>
+                    <div id="dungeon-list" class="action-grid"></div>
+                    
+                    <div id="dungeon-arena" style="display:none; margin-top:2rem; background:rgba(0,0,0,0.8); padding:2rem; border-radius:12px; border:1px solid #ff00ea;">
+                        <h3 id="dungeon-title" style="color:#ff00ea; text-align:center; margin-bottom:1rem; font-family:'Cinzel', serif; font-size:1.8rem;">Torre do Mago</h3>
+                        <div style="text-align:center; margin-bottom:1rem; font-family:'JetBrains Mono', monospace; font-size:1.2rem; color:var(--color-gold);">
+                            Progresso: <span id="dungeon-progress">0</span> / 10
+                        </div>
+                        <div class="combat-arena" style="border:none; padding:0;">
+                            <div class="entity">
+                                <h3>Aventureiro</h3>
+                                <div class="progress-bar-bg" style="height:12px; margin-top:1rem;"><div id="bar-dun-player-hp" class="progress-fill hp-color" style="width:100%"></div></div>
+                            </div>
+                            <div class="entity" style="border-color:#ff00ea;">
+                                <h3 id="dun-enemy-name">Lacaio Negro</h3>
+                                <div class="progress-bar-bg" style="height:12px; margin-top:1rem;"><div id="bar-dun-enemy-hp" class="progress-fill hp-color" style="width:100%; background:linear-gradient(90deg, #ff00ea, #b100e8);"></div></div>
+                            </div>
+                        </div>
+                        <div class="progress-container" style="margin-top:2rem;">
+                            <div class="progress-bar-bg"><div id="prog-dungeon" class="progress-fill" style="background:linear-gradient(45deg, #ff00ea, #ff00ea 10px, #b100e8 10px, #b100e8 20px);"></div></div>
+                            <div class="progress-text" id="status-dungeon">Avançando...</div>
+                        </div>
+                        <button class="action-btn" style="width:100%; margin-top:1rem; background:#ef233c; color:white;" onclick="leaveDungeon()">FUGIR DA MASMORRA</button>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
-    <script src="data.js"></script>
-    <script src="script.js"></script>
-    <script type="module" src="firebase_setup.js"></script>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

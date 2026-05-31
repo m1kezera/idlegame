@@ -140,6 +140,18 @@ export function completeActionTick() {
                 if(Math.random() <= dropChance) {
                     state.inventory[e.loot] = (state.inventory[e.loot] || 0) + dropAmount;
                 }
+                
+                // 15% de chance de dropar um Equipamento (Arma, Armadura ou Anel) baseado no nível do monstro
+                if(Math.random() <= 0.15) {
+                    const tier = Math.min(19, Math.floor(e.reqLevel / 4));
+                    const gearTypes = ['wep_', 'arm_', 'acc_'];
+                    const gType = gearTypes[Math.floor(Math.random() * gearTypes.length)];
+                    const gearId = gType + tier;
+                    if(GAME_DATA.gear && GAME_DATA.gear[gearId]) {
+                        state.inventory[gearId] = (state.inventory[gearId] || 0) + 1;
+                        createFloatingText(`Loot Raro!`, 'player', '#b100e8');
+                    }
+                }
             }
         }
         updateInventoryUI();

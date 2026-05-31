@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard Idle</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Partículas e Efeitos de Fundo -->
+    <div id="particles-bg"></div>
+    
+    <!-- Áudio Invisível -->
+    <!-- Rádio Lofi/Chill (100% confiável) -->
+    <audio id="bgm" src="https://lofi.stream.laut.fm/lofi" crossorigin="anonymous" loop></audio>
+    <audio id="sfx-chop" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9ec1694f28.mp3" crossorigin="anonymous"></audio>
+    <audio id="sfx-mine" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3473950ffb.mp3" crossorigin="anonymous"></audio>
+    <audio id="sfx-hit" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d352fc119.mp3" crossorigin="anonymous"></audio>
+
+    <div class="app-container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar glass">
+            <div class="logo">
+                <h1>AETHELGARD</h1>
+                <span style="font-size:0.7rem; color: #94a3b8; letter-spacing: 2px;">IDLE RPG</span>
+                <button id="btn-toggle-music" class="action-btn" style="width:100%; margin-top:1rem; font-size:0.8rem;">🔈 Ligar Música</button>
+            </div>
+            
+            <div class="status-mini">
+                <span style="color:#ffb703">🪙 <span id="res-gold">0</span></span>
+                <span style="color:#ef233c">❤️ <span id="res-hp">100</span>/<span id="res-maxhp">100</span></span>
+            </div>
+
+            <div class="nav-category">Geral</div>
+            <button class="nav-btn active" data-target="inventory" id="nav-inventory">🎒 Inventário</button>
+            <button class="nav-btn" data-target="market" id="nav-market">⚖️ Mercado</button>
+            <button class="nav-btn" data-target="companions" id="nav-companions">🐺 Companheiros</button>
+            <button class="nav-btn" data-target="cloud" id="nav-cloud">☁️ Nuvem (Save)</button>
+            
+            <div class="nav-category">Coleta</div>
+            <button class="nav-btn" data-target="woodcutting" id="nav-woodcutting">🪓 Corte de Lenha <span id="lvl-wood" class="lvl-badge">Nv 1</span></button>
+            <button class="nav-btn" data-target="mining" id="nav-mining">⛏️ Mineração <span id="lvl-mine" class="lvl-badge">Nv 1</span></button>
+            <button class="nav-btn" data-target="fishing" id="nav-fishing">🎣 Pescaria <span id="lvl-fish" class="lvl-badge">Nv 1</span></button>
+            
+            <div class="nav-category">Artesanato</div>
+            <button class="nav-btn" data-target="cooking" id="nav-cooking">🍳 Culinária <span id="lvl-cook" class="lvl-badge">Nv 1</span></button>
+            <button class="nav-btn" data-target="smithing" id="nav-smithing">⚒️ Forja <span id="lvl-smith" class="lvl-badge">Nv 1</span></button>
+            
+            <div class="nav-category">Aventura</div>
+            <button class="nav-btn" data-target="combat" id="nav-combat">⚔️ Combate <span id="lvl-combat" class="lvl-badge">Nv 1</span></button>
+        </aside>
+
+        <!-- Painel Central -->
+        <main class="main-content">
+            
+            <!-- INVENTÁRIO -->
+            <section id="tab-inventory" class="tab-content active glass">
+                <div class="banner" style="background-image: url('assets/bg.png');">
+                    <h2>MOCHILA DO AVENTUREIRO</h2>
+                </div>
+                <div class="skill-body">
+                    <p>Todos os seus recursos armazenados.</p>
+                    <div id="inventory-grid" class="inventory-grid">
+                        <!-- Gerado via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- MERCADO -->
+            <section id="tab-market" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/market.png');">
+                    <h2>O GRANDE MERCADO</h2>
+                </div>
+                <div class="skill-body">
+                    <p style="text-align:center; color:var(--text-muted); margin-bottom: 2rem;">Venda seus recursos e compre Upgrades Passivos para sua conta.</p>
+                    
+                    <h3 style="color:var(--color-gold); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem;">Vender Inventário</h3>
+                    <div id="market-sell-grid" class="inventory-grid" style="margin-bottom: 3rem;">
+                        <!-- JS renders sell items here -->
+                    </div>
+
+                    <h3 style="color:var(--color-gold); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem;">Upgrades Passivos Globais</h3>
+                    <div id="market-upgrade-grid" class="shop-grid">
+                        <!-- JS renders global upgrades here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMPANIONS -->
+            <section id="tab-companions" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/companion.png');">
+                    <h2>COMPANHEIROS & AUTOMAÇÃO</h2>
+                </div>
+                <div class="skill-body">
+                    <p>Contrate ajudantes que trabalharão passivamente no fundo.</p>
+                    <div id="companion-shop" class="shop-grid"></div>
+                </div>
+            </section>
+
+            <!-- CLOUD SAVE -->
+            <section id="tab-cloud" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/bg.png');">
+                    <h2>SALVAMENTO EM NUVEM</h2>
+                </div>
+                <div class="skill-body" style="text-align:center;">
+                    <p>Conecte-se para manter seu progresso seguro através de múltiplos dispositivos.</p>
+                    
+                    <div id="cloud-status" style="margin: 2rem 0; font-size: 1.2rem; font-weight: bold;">
+                        <span style="color:#ef233c">Desconectado</span>
+                    </div>
+
+                    <div id="cloud-auth-panel" style="background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 8px; max-width: 400px; margin: 0 auto;">
+                        <button class="action-btn" style="width:100%; margin-bottom: 1rem; background:#4285F4; color:white;" onclick="window.loginGoogle()">Continuar com o Google</button>
+                    </div>
+
+                    <div id="cloud-data-panel" style="display:none; background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 8px; max-width: 400px; margin: 0 auto;">
+                        <button id="btn-save-cloud" class="action-btn" style="width:100%; margin-bottom: 1rem; background: var(--color-gold);" onclick="window.saveToCloud()">Salvar na Nuvem</button>
+                        <button id="btn-load-cloud" class="action-btn" style="width:100%; margin-bottom: 2rem; background: #00f3ff; color:black" onclick="window.loadFromCloud()">Carregar da Nuvem</button>
+                        <button class="action-btn" style="width:100%; background: #ef233c; color:white" onclick="window.logoutUser()">Sair da Conta</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WOODCUTTING -->
+            <section id="tab-woodcutting" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/wood.png');">
+                    <h2>CORTE DE LENHA</h2>
+                </div>
+                <div class="skill-body">
+                    <div id="wood-list" class="action-grid"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg"><div id="prog-woodcutting" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-woodcutting">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MINING -->
+            <section id="tab-mining" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/mining.png');">
+                    <h2>MINERAÇÃO</h2>
+                </div>
+                <div class="skill-body">
+                    <div id="mine-list" class="action-grid"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg"><div id="prog-mining" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-mining">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FISHING -->
+            <section id="tab-fishing" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/fishing.png');">
+                    <h2>PESCARIA</h2>
+                </div>
+                <div class="skill-body">
+                    <div id="fish-list" class="action-grid"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg"><div id="prog-fishing" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-fishing">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COOKING -->
+            <section id="tab-cooking" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/cooking.png');">
+                    <h2>CULINÁRIA</h2>
+                </div>
+                <div class="skill-body">
+                    <div id="cook-list" class="action-grid"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg"><div id="prog-cooking" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-cooking">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SMITHING -->
+            <section id="tab-smithing" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/smithing.png');">
+                    <h2>FORJA METALÚRGICA</h2>
+                </div>
+                <div class="skill-body">
+                    <div id="smith-list" class="action-grid"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg"><div id="prog-smithing" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-smithing">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMBAT -->
+            <section id="tab-combat" class="tab-content glass">
+                <div class="banner" style="background-image: url('assets/bg.png');">
+                    <h2>COMBATE ÉPICO</h2>
+                </div>
+                <div class="skill-body">
+                    
+                    <div class="combat-arena">
+                        <div class="entity">
+                            <h3>Aventureiro</h3>
+                            <div class="progress-bar-bg" style="height:12px; margin-top:1rem;"><div id="bar-player-hp" class="progress-fill hp-color" style="width:100%"></div></div>
+                        </div>
+                        
+                        <div class="entity">
+                            <h3 id="combat-enemy-name">👹 Goblin</h3>
+                            <div class="progress-bar-bg" style="height:12px; margin-top:1rem;"><div id="bar-enemy-hp" class="progress-fill hp-color" style="width:100%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="magic-bar" id="spells-container">
+                        <!-- Spells renderizados via JS -->
+                    </div>
+
+                    <div id="enemy-list" style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;"></div>
+
+                    <div class="progress-container" style="margin-top:2rem;">
+                        <div class="progress-bar-bg"><div id="prog-combat" class="progress-fill"></div></div>
+                        <div class="progress-text" id="status-combat">Inativo</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script type="module" src="firebase_setup.js"></script>
+</body>
+</html>
